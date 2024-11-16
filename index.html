@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: beige;
+            color: black;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: orange;
+            margin-top: 20px;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: orange;
+        }
+        .navigation {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+        }
+        .next {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+        }
+		
+		
+	
+	</style>
+</head>
+<body>
+
+<p>
+<span><i>
+	UNIVERSIDAD AUTONOMA DE SANTO DOMINGO<br>
+	Escuela de Informatica<br>
+	Alexander Solano de la Cruz,	AB5972<br>
+	<br>
+</i></span>
+  </p>
+  
+
+<br>
+
+
+<div class="container" id="content">
+    <h1>AJAX</h1>
+    <div id="page"></div>
+</div>
+
+<div class="navigation">
+    <button class="button" id="back" onclick="navigate(-1)">Atrás</button>
+</div>
+<div class="next">
+    <button class="button" id="next" onclick="navigate(1)">Adelantar</button>
+</div>
+
+<script>
+    const pages = [
+        {
+            title: "AJAX Introducción",
+            content: `AJAX (Asynchronous JavaScript and XML) es una técnica que permite actualizar partes de una página web de manera asíncrona, sin necesidad de recargar toda la página. Esto proporciona una experiencia de usuario más dinámica y rápida.`
+        },
+        {
+            title: "AJAX XMLHttp",
+            content: `XMLHttpRequest es el objeto fundamental que permite realizar solicitudes HTTP asíncronas. Con él, puedes enviar y recibir datos en diferentes formatos, como XML, JSON o texto plano.
+            <pre>
+            // Crear un objeto XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+            // Configurar la solicitud
+            xhr.open('GET', 'https://api.example.com/data', true);
+            // Enviar la solicitud
+            xhr.send();
+            </pre>`
+        },
+        {
+            title: "AJAX Request",
+            content: `Una solicitud AJAX se inicia mediante el objeto XMLHttpRequest. Puedes especificar el método HTTP (GET, POST, etc.), la URL del recurso y los datos que deseas enviar al servidor.
+            <pre>
+            // Función para realizar una solicitud AJAX
+            function sendRequest() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'https://api.example.com/submit', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                // Manejar la respuesta
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log(xhr.responseText);
+                    }
+                };
+                // Enviar datos en formato JSON
+                var data = JSON.stringify({ name: "John", age: 30 });
+                xhr.send(data);
+            }
+            // Llamar a la función
+            sendRequest();
+            </pre>`
+        },
+        {
+            title: "AJAX Response",
+            content: `La respuesta del servidor a una solicitud AJAX puede incluir datos en varios formatos. El método onreadystatechange del objeto XMLHttpRequest permite manejar la respuesta una vez que se recibe.
+            <pre>
+            // Función para manejar la respuesta de una solicitud AJAX
+            function handleResponse() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'https://api.example.com/data', true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            console.log('Respuesta recibida:', xhr.responseText);
+                        } else {
+                            console.error('Error en la solicitud:', xhr.status);
+                        }
+                    }
+                };
+                xhr.send();
+            }
+            // Llamar a la función
+            handleResponse();
+            </pre>`
+        },
+        {
+            title: "AJAX XML File",
+            content: `Tradicionalmente, AJAX utilizaba XML como formato de intercambio de datos. Aunque hoy en día JSON es más común, XML aún se utiliza en ciertas aplicaciones.
+            <pre>
+            // Función para cargar un archivo XML usando AJAX
+            function loadXML() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'data.xml', true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var xmlDoc = xhr.responseXML;
+                        var items = xmlDoc.getElementsByTagName('item');
+                        for (var i = 0; i < items.length; i++) {
+                            console.log(items[i].textContent);
+                        }
+                    }
+                };
+                xhr.send();
+            }
+            // Llamar a la función
+            loadXML();
+            </pre>`
+        },
+        {
+            title: "AJAX PHP",
+            content: `AJAX se puede integrar fácilmente con PHP. Puedes enviar datos al servidor utilizando AJAX y recibir respuestas procesadas en formato JSON o HTML.
+            <pre>
+            // Función para enviar datos a un script PHP usando AJAX
+            function sendDataToPHP() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'process.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log('Respuesta de PHP:', xhr.responseText);
+                    }
+                };
+                xhr.send('name=John&age=30');
+            }
+            // Llamar a la función
+            sendDataToPHP();
+            </pre>`
+        },
+        {
+            title: "AJAX ASP",
+            content: `Similar a PHP, AJAX se puede utilizar con ASP.NET para enviar y recibir datos desde el servidor, lo que permite crear aplicaciones web interactivas y dinámicas.
+            <pre>
+            // Función para enviar datos a un script ASP usando AJAX
+            function sendDataToASP() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'process.asp', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log('Respuesta de ASP:', xhr.responseText);
+                    }
+                };
+                xhr.send('name=John&age=30');
+            }
+            // Llamar a la función
+            sendDataToASP();
+            </pre>`
+        },
+        {
+            title: "AJAX Database",
+            content: `AJAX puede interactuar con bases de datos mediante un lenguaje de programación del lado del servidor (como PHP o Node.js) para realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) de manera asíncrona.
+            <pre>
+            // Función para obtener datos de una base de datos usando AJAX
+            function fetchDataFromDatabase() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'getData.php', true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        console.log('Datos de la base de datos:', data);
+                    }
+                };
+                xhr.send();
+            }
+            // Llamar a la función
+            fetchDataFromDatabase();
+            </pre>`
+        },
+        {
+            title: "AJAX Applications",
+            content: `Las aplicaciones AJAX incluyen plataformas de correo electrónico, redes sociales y cualquier aplicación web que requiera una experiencia de usuario fluida y rápida.`
+        },
+        {
+            title: "AJAX Examples",
+            content: `Ejemplos de uso de AJAX son la carga de contenido dinámico en un sitio web, la validación de formularios en tiempo real y la actualización de datos en gráficos sin recargar la página.
+            <pre>
+            // Ejemplo de aplicación AJAX: cargar contenido dinámico
+            function loadContent() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'content.html', true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        document.getElementById('dynamicContent').innerHTML = xhr.responseText;
+                    }
+                };
+                xhr.send();
+            }
+            // Llamar a la función cuando se haga clic en un botón
+            document.getElementById('loadButton').onclick = loadContent;
+            </pre>`
+        }
+    ];
+
+    let currentPage = 0;
+
+    function loadPage() {
+        const pageDiv = document.getElementById('page');
+        const { title, content } = pages[currentPage];
+
+        pageDiv.innerHTML = `<h2>${title}</h2>${content}`;
+
+        // Actualizar visibilidad de botones
+        document.getElementById('back').style.display = currentPage === 0 ? 'none' : 'block';
+        document.getElementById('next').innerText = currentPage === pages.length - 1 ? 'Cerrar Aplicación' : 'Adelantar';
+    }
+
+    function navigate(direction) {
+        if (direction === 1) {
+            if (currentPage === pages.length - 1) {
+                window.close(); // Cierra la ventana si es la última página
+            } else {
+                currentPage++;
+            }
+        } else {
+            currentPage--;
+        }
+        loadPage();
+    }
+
+    // Cargar la página inicial
+    loadPage();
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
